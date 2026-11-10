@@ -7,9 +7,16 @@ export function generateStaticParams() {
   return [{ slug: "passport-photo" }];
 }
 
-export default function SheetPage({ params, searchParams }: { params: { slug: string }; searchParams?: { joint?: string } }) {
-  const tool = allTools.find(({ slug }) => slug === params.slug);
+type Props = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ joint?: string }>;
+};
+
+export default async function SheetPage({ params, searchParams }: Props) {
+  const [{ slug }, query] = await Promise.all([params, searchParams]);
+
+  const tool = allTools.find((item) => item.slug === slug);
   if (!tool) notFound();
-  if (params.slug !== "passport-photo") return <ToolPlaceholder slug={params.slug} />;
-  return <SheetWorkspace toolId={params.slug} openJointOnStart={searchParams?.joint === "1"} />;
+  if (slug !== "passport-photo") return <ToolPlaceholder slug={slug} />;
+  return <SheetWorkspace toolId={slug} openJointOnStart={query.joint === "1"} />;
 }

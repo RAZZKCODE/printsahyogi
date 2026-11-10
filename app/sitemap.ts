@@ -4,8 +4,8 @@ import { allTools } from "@/lib/navigation";
 
 export const dynamic = "force-dynamic";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const requestHeaders = headers();
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const requestHeaders = await headers();
   const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL;
   const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "localhost:3000";
   const protocol = requestHeaders.get("x-forwarded-proto") ?? "https";

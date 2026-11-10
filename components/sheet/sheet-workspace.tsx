@@ -23,11 +23,18 @@ const TOOLBAR_FIELDS = [
 const SHEET_SCALE = 2.45;
 const imageFormats = ".jpg,.jpeg,.png,.webp,.gif,.bmp";
 
+const EMPTY_FILES: File[] = [];
+const EMPTY_OPERATIONS: PhotoEditOperation[] = [];
+const EMPTY_PHOTO_OPERATIONS: Record<number, PhotoEditOperation[]> = {};
+const EMPTY_JOINT_PHOTOS: { id: string; image: Blob; createdAt: number }[] = [];
+
 export function SheetWorkspace({ toolId, openJointOnStart = false }: { toolId: string; openJointOnStart?: boolean }) {
   const router = useRouter();
   const session = useUploadStore((state) => state.sessions[toolId]);
-  const operations = session?.operations ?? [];
-  const fileList = session?.files ?? [];
+  const operations = session?.operations ?? EMPTY_OPERATIONS;
+  const fileList = session?.files ?? EMPTY_FILES;
+  const photoOperations = session?.photoOperations ?? EMPTY_PHOTO_OPERATIONS;
+  const jointPhotos = session?.jointPhotos ?? EMPTY_JOINT_PHOTOS;
   const hydrated = useUploadStore((state) => state.hydrated);
   const appendFiles = useUploadStore((state) => state.appendFiles);
   const setPhotoOperations = useUploadStore((state) => state.setPhotoOperations);
@@ -36,8 +43,6 @@ export function SheetWorkspace({ toolId, openJointOnStart = false }: { toolId: s
   const reorderFiles = useUploadStore((state) => state.reorderFiles);
   const addJointPhoto = useUploadStore((state) => state.addJointPhoto);
   const removeJointPhoto = useUploadStore((state) => state.removeJointPhoto);
-  const photoOperations = session?.photoOperations ?? {};
-  const jointPhotos = session?.jointPhotos ?? [];
   const [settings, setSettings] = useState<SheetSettings>(DEFAULT_SHEET_SETTINGS);
   const [copies, setCopies] = useState<number[]>([]);
   const [settingsReady, setSettingsReady] = useState(false);
@@ -598,20 +603,32 @@ function getImageDimensions(file: Blob) {
 }
 
 function snapshotFromOperations(width: number, height: number, operations: PhotoEditOperation[]): PhotoEditSnapshot {
-  let rotation = 0, straighten = 0, flipHorizontal = false, flipVertical = false;
+  let rotation = 0;
+  let straighten = 0;
+  let flipHorizontal = false;
+  let flipVertical = false;
   let cropOperation: Extract<PhotoEditOperation, { type: "crop" }> | undefined;
+
   for (const operation of operations) {
-    if (operation.type === "rotate") rotation = operation.quarterTurns;
+    if (operation.type === "rotate") rotation = ((operation.quarterTurns % 4) + 4) % 4;
+    if (operation.type === "flip") {
+      flipHorizontal = operation.horizontal;
+      flipVertical = operation.vertical;
+    }
     if (operation.type === "straighten") straighten = operation.degrees;
-    if (operation.type === "flip") { flipHorizontal = operation.horizontal; flipVertical = operation.vertical; }
     if (operation.type === "crop") cropOperation = operation;
   }
-  const orientedWidth = Math.abs(rotation % 2) ? height : width;
-  const orientedHeight = Math.abs(rotation % 2) ? width : height;
+
+  const orientedWidth = rotation % 2 ? height : width;
+  const orientedHeight = rotation % 2 ? width : height;
+
   return {
     crop: cropOperation?.rect ?? { x: 0, y: 0, width: orientedWidth, height: orientedHeight },
     aspectRatio: cropOperation?.aspectRatio ?? null,
     aspectKey: cropOperation?.aspectKey ?? "free",
-    rotation, straighten, flipHorizontal, flipVertical
+    rotation,
+    flipHorizontal,
+    flipVertical,
+    straighten
   };
 }

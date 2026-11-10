@@ -7,10 +7,29 @@ export function generateStaticParams() {
   return [{ slug: "passport-photo" }];
 }
 
-export default function EditorEntryPage({ params, searchParams }: { params: { slug: string }; searchParams?: { fileIndex?: string; returnToJoint?: string; returnToSheet?: string } }) {
-  const tool = allTools.find(({ slug }) => slug === params.slug);
+type Props = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{
+    fileIndex?: string;
+    returnToJoint?: string;
+    returnToSheet?: string;
+  }>;
+};
+
+export default async function EditorEntryPage({ params, searchParams }: Props) {
+  const [{ slug }, query] = await Promise.all([params, searchParams]);
+
+  const tool = allTools.find((item) => item.slug === slug);
   if (!tool) notFound();
-  if (params.slug !== "passport-photo") return <ToolPlaceholder slug={params.slug} />;
-  const fileIndex = Math.max(0, Number.parseInt(searchParams?.fileIndex ?? "0", 10) || 0);
-  return <PhotoEditorModal toolId={params.slug} fileIndex={fileIndex} returnToJoint={searchParams?.returnToJoint === "1"} returnToSheet={searchParams?.returnToSheet === "1"} />;
+  if (slug !== "passport-photo") return <ToolPlaceholder slug={slug} />;
+
+  const fileIndex = Math.max(0, Number.parseInt(query.fileIndex ?? "0", 10) || 0);
+  return (
+    <PhotoEditorModal
+      toolId={slug}
+      fileIndex={fileIndex}
+      returnToJoint={query.returnToJoint === "1"}
+      returnToSheet={query.returnToSheet === "1"}
+    />
+  );
 }
