@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 40 20% 98%;
+  --foreground: 222 25% 15%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 25% 15%;
+  --primary: 158 55% 30%;
+  --primary-foreground: 0 0% 100%;
+  --muted: 35 16% 93%;
+  --muted-foreground: 220 10% 45%;
+  --border: 35 14% 87%;
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: 222 23% 10%;
+  --foreground: 210 24% 94%;
+  --card: 222 21% 14%;
+  --card-foreground: 210 24% 94%;
+  --primary: 158 55% 48%;
+  --primary-foreground: 222 23% 10%;
+  --muted: 220 16% 20%;
+  --muted-foreground: 215 14% 67%;
+  --border: 220 14% 25%;
+}
+
+* { border-color: hsl(var(--border)); }
+body { background: hsl(var(--background)); color: hsl(var(--foreground)); }
+
+@media print {
+  @page { margin: 0; }
+  body * { visibility: hidden !important; }
+  [data-sheet-workspace], [data-sheet-workspace] * { visibility: visible !important; }
+  [data-sheet-workspace] { position: fixed !important; inset: 0 !important; display: block !important; overflow: visible !important; background: white !important; }
+  .sheet-preview-frame { width: var(--paper-width-mm) !important; max-width: none !important; height: var(--paper-height-mm) !important; margin: 0 auto !important; padding: 0 !important; }
+  .sheet-paper { width: var(--paper-width-mm) !important; height: var(--paper-height-mm) !important; box-shadow: none !important; }
+  .sheet-photo-cell, .sheet-ghost-cell { left: var(--left-mm) !important; top: var(--top-mm) !important; width: var(--cell-width-mm) !important; height: var(--cell-height-mm) !important; }
+  .sheet-photo-cell { border-width: var(--border-mm) !important; }
+  .print\:hidden { display: none !important; }
+  .print\:break-after-page { break-after: page; }
+}
