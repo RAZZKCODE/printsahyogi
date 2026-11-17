@@ -1,39 +1,41 @@
 {
-    "name": "printsahyogi",
-    "version": "0.1.0",
-    "private": true,
-    "scripts": {
-        "dev": "next dev",
-        "build": "next build",
-        "start": "next start",
-        "lint": "next lint",
-        "test:layout": "node --experimental-strip-types --test --test-isolation=none tools/sheet/layout.test.mjs"
-    },
-    "dependencies": {
-        "@imgly/background-removal": "1.7.0",
-        "@radix-ui/react-slot": "^1.1.0",
-        "class-variance-authority": "^0.7.1",
-        "clsx": "^2.1.1",
-        "idb": "^8.0.0",
-        "jszip": "^3.10.2",
-        "lucide-react": "^0.468.0",
-        "next": "^16.4.6",
-        "next-intl": "^4.14.10",
-        "next-themes": "^0.4.4",
-        "pdf-lib": "1.17.1",
-        "pdfjs-dist": "4.10.38",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1",
-        "tailwind-merge": "^2.6.0",
-        "zustand": "^5.0.2"
-    },
-    "devDependencies": {
-        "@types/node": "^22.10.2",
-        "@types/react": "^18.3.12",
-        "@types/react-dom": "^18.3.1",
-        "autoprefixer": "^10.4.20",
-        "postcss": "^8.4.49",
-        "tailwindcss": "^3.4.16",
-        "typescript": "^5.7.2"
-    }
+  "name": "printsathi",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test:layout": "node --experimental-strip-types --test --test-isolation=none src/tools/sheet/layout.test.mjs",
+    "test:cards": "node --experimental-strip-types --test --test-isolation=none src/tools/card-crop/layout.test.mjs src/tools/card-crop/aadhaar-detection.test.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@imgly/background-removal": "1.7.0",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@supabase/supabase-js": "^2.119.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "idb": "^8.0.0",
+    "jszip": "^3.10.2",
+    "lucide-react": "^0.468.0",
+    "next": "^16.4.6",
+    "next-intl": "^4.14.10",
+    "next-themes": "^0.4.4",
+    "pdf-lib": "1.17.1",
+    "pdfjs-dist": "4.10.38",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.6.0",
+    "zustand": "^5.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16",
+    "typescript": "^5.7.2"
+  }
 }
